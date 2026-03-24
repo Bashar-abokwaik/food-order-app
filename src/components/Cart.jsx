@@ -87,7 +87,7 @@ function onDecrease(itemId) {
         <Button textOnly onClick={handleCloseCart}>
           Close
         </Button>
-        <Button textOnly onClick={handleClearCart}>Clear & Close</Button>
+        <Button clear onClick={handleClearCart}>Clear & Close</Button>
         {cartCtx.items.length > 0 && (
           <Button onClick={handleGoToCheckout}>Go to Checkout</Button>
         )}

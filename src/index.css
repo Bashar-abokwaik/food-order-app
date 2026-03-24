@@ -131,7 +131,23 @@ h1 {
 .modal-actions .text-button:active {
   color: #312c1d;
 }
+.modal-actions .clear-button {
+  background-color: rgb(255, 48, 48); 
+  border: none;
+  border-radius: 6px;           
+  padding: 0.5rem 1.5rem;
+  color: white;
+  cursor: pointer;                
+  font-weight: 500;
+  transition: background-color 0.3s, transform 0.2s; 
+}
 
+.modal-actions .clear-button:hover,
+.modal-actions .clear-button:active {
+  background-color: rgb(200, 40, 40); 
+  transform: scale(1.05);           
+  color: white;
+}
 .cart-total {
   display: flex;
   justify-content: flex-end;

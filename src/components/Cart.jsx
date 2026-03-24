@@ -31,6 +31,7 @@ export default function Cart() {
   function handleClearCart() {
     cartCtx.clearCart();
     localStorage.removeItem("cartItems");
+    handleCloseCart();
   }
   function onIncrease(item) {
     cartCtx.addItem(item);
@@ -86,7 +87,7 @@ function onDecrease(itemId) {
         <Button textOnly onClick={handleCloseCart}>
           Close
         </Button>
-        <Button textOnly onClick={handleClearCart}>Clear Cart</Button>
+        <Button textOnly onClick={handleClearCart}>Clear & Close</Button>
         {cartCtx.items.length > 0 && (
           <Button onClick={handleGoToCheckout}>Go to Checkout</Button>
         )}

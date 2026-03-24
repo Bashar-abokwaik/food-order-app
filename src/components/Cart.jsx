@@ -28,6 +28,40 @@ export default function Cart() {
     userProgressCtx.showCheckout();
   }
 
+  function handleClearCart() {
+    cartCtx.clearCart();
+    localStorage.removeItem("cartItems");
+  }
+  function onIncrease(item) {
+    cartCtx.addItem(item);
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+    const index = cartItems.findIndex(cartItem => cartItem.id === item.id);
+
+    if (index >= 0) {
+      cartItems[index].quantity += 1;
+    } else {
+      cartItems.push({ ...item, quantity: 1 });
+    }
+
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }
+  
+function onDecrease(itemId) {
+  cartCtx.removeItem(itemId);
+
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const index = cartItems.findIndex(item => item.id === itemId);
+
+  if (index >= 0) {
+    if (cartItems[index].quantity > 1) {
+      cartItems[index].quantity -= 1;
+    } else {
+      cartItems.splice(index, 1); // remove completely
+    }
+  }
+  localStorage.setItem("cartItems", JSON.stringify(cartItems));
+}
+
   return (
     <Modal
       className="cart"
@@ -42,8 +76,8 @@ export default function Cart() {
             name={item.name}
             quantity={item.quantity}
             price={item.price}
-            onIncrease={() => cartCtx.addItem(item)}
-            onDecrease={() => cartCtx.removeItem(item.id)}
+            onIncrease={() => onIncrease(item)}
+            onDecrease={() => onDecrease(item.id)}
           />
         ))}
       </ul>
@@ -52,6 +86,7 @@ export default function Cart() {
         <Button textOnly onClick={handleCloseCart}>
           Close
         </Button>
+        <Button textOnly onClick={handleClearCart}>Clear Cart</Button>
         {cartCtx.items.length > 0 && (
           <Button onClick={handleGoToCheckout}>Go to Checkout</Button>
         )}

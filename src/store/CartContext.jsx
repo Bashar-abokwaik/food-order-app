@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useEffect } from "react";
 
 // Create Cart Context
 const CartContext = createContext({
@@ -10,12 +10,11 @@ const CartContext = createContext({
 
 // Reducer function to manage cart state
 function cartReducer(state, action) {
-
   // Handle different action types
   // Add item to cart
   if (action.type === "ADD_ITEM") {
     const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.item.id
+      (item) => item.id === action.item.id,
     ); // Check if item already exists in cart
 
     const updatedItems = [...state.items];
@@ -37,10 +36,9 @@ function cartReducer(state, action) {
   // Remove item from cart
   if (action.type === "REMOVE_ITEM") {
     const existingCartItemIndex = state.items.findIndex(
-      (item) => item.id === action.id
-    );// Find item in cart
+      (item) => item.id === action.id,
+    ); // Find item in cart
 
-    
     const existingCartItem = state.items[existingCartItemIndex];
 
     const updatedItems = [...state.items];
@@ -52,7 +50,7 @@ function cartReducer(state, action) {
       const updatedItem = {
         ...existingCartItem,
         quantity: existingCartItem.quantity - 1,
-      };// Decrease item quantity by 1
+      }; // Decrease item quantity by 1
       updatedItems[existingCartItemIndex] = updatedItem;
     }
     return { ...state, items: updatedItems };
@@ -68,10 +66,17 @@ function cartReducer(state, action) {
 
 // Cart Context Provider component
 export function CartContextProvider({ children }) {
+  // Initialize cart state from localStorage
+  const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
   // Use useReducer to manage cart state
   const [cart, dispatchCartAction] = useReducer(cartReducer, {
-    items: [],
+    items: storedItems,
   });
+
+  // Sync cart state with localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cart.items));
+  }, [cart.items]);
 
   // Functions to dispatch actions to the reducer
   function addItem(item) {

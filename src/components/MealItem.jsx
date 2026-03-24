@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { currencyFormatter } from "../util/formatting";
 import Button from "./UI/Button";
 import CartContext from "../store/CartContext";
@@ -8,9 +8,19 @@ export default function MealItem({ meal }) {
   // Access cart context
   const cartCtx = useContext(CartContext);
   // Handler to add meal to cart
-  function handleAddMealToCart() {
-    cartCtx.addItem(meal);
+function handleAddMealToCart() {
+  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+  const index = cartItems.findIndex(item => item.id === meal.id);
+
+  if (index >= 0) {
+    cartItems[index].quantity += 1;
+  } else {
+    cartItems.push({ ...meal, quantity: 1 });
   }
+
+  localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  cartCtx.addItem({ ...meal, quantity: 1 });
+}
 
   return (
     <li className="meal-item">
